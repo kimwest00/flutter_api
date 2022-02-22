@@ -31,27 +31,18 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-Future<UserModel?> createUser(String name, String jobTitle) async{
+Future<UserModel?> createUser(int count, String status) async{
   final String apiUrl = "https://reqres.in/api/users";
 
   final response = await http.post(apiUrl, body: {
-    "name": name,
-    "job": jobTitle
+    "count": count,
+    "status": status
   });
 
   if(response.statusCode == 201){
@@ -67,8 +58,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   UserModel? _user;
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController jobController = TextEditingController();
+  final TextEditingController countController = TextEditingController();
+  final TextEditingController statusController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -84,27 +75,27 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
 
             TextField(
-              controller: nameController,
+              controller: countController,
             ),
 
             TextField(
-              controller: jobController,
+              controller: statusController,
             ),
 
             SizedBox(height: 32,),
 
             _user == null ? Container() :
-            Text("The user ${_user?.name}, ${_user?.job} is created successfully at time ${_user?.createdAt.toIso8601String()} "),
+            Text("The user ${_user?.count}, ${_user?.status} is created successfully at time  "),
 
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final String name = nameController.text;
-          final String jobTitle = jobController.text;
+          final int count = int.parse(countController.text);
+          final String status = statusController.text;
 
-          final UserModel? user = await createUser(name, jobTitle);
+          final UserModel? user = await createUser(count, status);
 
           setState(() {
             _user = user!;

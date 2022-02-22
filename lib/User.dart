@@ -9,29 +9,24 @@ UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
 String userModelToJson(UserModel data) => json.encode(data.toJson());
 
 class UserModel {
-  String name;
-  String job;
-  String id;
-  DateTime createdAt;
+  int count;
+  String status;
 
   UserModel({
-    required this.name,
-    required this.job,
-    required this.id,
-    required this.createdAt,
+    required this.count,
+    required this.status,
+
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-    name: json["name"],
-    job: json["job"],
-    id: json["id"],
-    createdAt: DateTime.parse(json["createdAt"]),
+    count: json["count"],
+    status: json["status"],
+
   );
 
   Map<String, dynamic> toJson() => {
-    "name": name,
-    "job": job,
-    "id": id,
-    "createdAt": createdAt.toIso8601String(),
+    "count": count,
+    "status": status,
+
   };
 }

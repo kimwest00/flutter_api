@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:host_please/User.dart';
+import 'dart:io';
 
 void main() => runApp(MyApp());
 
@@ -39,12 +40,14 @@ class MyHomePage extends StatefulWidget {
 
 Future<UserModel?> createUser(int count, String status) async{
   const String apiUrl = "http://34.134.67.181:8080/api/subscribe/2";
-  Map<String,String> headers ={
-    'Content-Type':'application/json',
-    'Accept':'application/json; charset=UTF-8',
-    // 'Authorization':1,
-  };
-  final response = await http.post(apiUrl, headers:headers, body: json.encode(
+  // Map<String,String> headers ={
+  //   'Content-Type':'application/json',
+  //   'Accept':'application/json',
+  //   // 'Authorization': 1,
+  // };
+  final response = await http.post(apiUrl,headers: {HttpHeaders.authorizationHeader:'1'}
+
+  ,body: (
       {
         "count": count,
         "status": status

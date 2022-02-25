@@ -39,25 +39,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 Future<UserModel?> createUser(int count, String status) async{
-  const String apiUrl = "http://34.134.67.181:8080/api/subscribe/2";
-  // Map<String,String> headers ={
-  //   'Content-Type':'application/json',
-  //   'Accept':'application/json',
-  //   // 'Authorization': 1,
-  // };
-  final response = await http.post(apiUrl,headers: {HttpHeaders.authorizationHeader:'1'}
 
-  ,body: (
-      {
-        "count": count,
-        "status": status
-      }
-  ));
-  print("hi;");
+  const String apiUrl = "http://34.134.67.181:8080/api/subscribe/3";
+  var responsebody = jsonEncode({"count": count as int, "status": status});
+  final response = await http.post(apiUrl,headers: {HttpHeaders.authorizationHeader: '1'}
+    ,body:
+      responsebody
+  );
+
   print(response.statusCode);
-  if(response.statusCode == 201){
-    final String responseString = response.body;
 
+  if(response.statusCode == 200){
+    final String responseString = response.body;
     return userModelFromJson(responseString);
   }else{
     return null;
@@ -67,7 +60,6 @@ Future<UserModel?> createUser(int count, String status) async{
 class _MyHomePageState extends State<MyHomePage> {
 
   UserModel? _user;
-
   final TextEditingController countController = TextEditingController();
   final TextEditingController statusController = TextEditingController();
 
@@ -83,7 +75,6 @@ class _MyHomePageState extends State<MyHomePage> {
         padding: EdgeInsets.all(32),
         child: Column(
           children: <Widget>[
-
             TextField(
               controller: countController,
             ),
@@ -104,8 +95,8 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: () async {
           final int count = int.parse(countController.text);
           final String status = statusController.text;
-
           final UserModel? user = await createUser(count, status);
+
 
           setState(() {
             _user = user!;

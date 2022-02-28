@@ -38,12 +38,18 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-Future<UserModel?> createUser(int count, String status) async{
+Future<Welcome?> createUser(int price, String date, String f_name) async{
+  const String apiUrl = "http://34.134.67.181:8080/api/donation";
+  var responsebody = jsonEncode({
+    "donationDate": date,
+    "donationPrice": price,
+    "f_name": f_name
+  });
 
-  const String apiUrl = "http://34.134.67.181:8080/api/subscribe/3";
-  var responsebody = jsonEncode({"count": count as int, "status": status});
-  final response = await http.post(apiUrl,headers: {HttpHeaders.authorizationHeader: '1'}
-    ,body:
+  final response = await http.post(Uri.parse(apiUrl),headers: {HttpHeaders.authorizationHeader:'1'
+  ,"Accept": "application/json",
+    "Access-Control-Allow-Origin": "*"}
+      ,body:
       responsebody
   );
 
@@ -51,7 +57,7 @@ Future<UserModel?> createUser(int count, String status) async{
 
   if(response.statusCode == 200){
     final String responseString = response.body;
-    return userModelFromJson(responseString);
+    return welcomeFromJson(responseString);
   }else{
     return null;
   }
@@ -59,9 +65,10 @@ Future<UserModel?> createUser(int count, String status) async{
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  UserModel? _user;
-  final TextEditingController countController = TextEditingController();
-  final TextEditingController statusController = TextEditingController();
+  Welcome? _welcome;
+  final TextEditingController f_nameController = TextEditingController();
+  final TextEditingController priceController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -76,31 +83,37 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: <Widget>[
             TextField(
-              controller: countController,
+              controller: f_nameController,
             ),
 
             TextField(
-              controller: statusController,
+              controller: priceController,
+            ),
+            TextField(
+              controller: dateController,
             ),
 
             SizedBox(height: 32,),
 
-            _user == null ? Container() :
-            Text("The user ${_user?.count}, ${_user?.status} is created successfully at time  "),
+            _welcome == null ? Container() :
+            Text("The user ${_welcome?.donationPrice}, ${_welcome?.donationDate} is created successfully at time  "),
+
 
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final int count = int.parse(countController.text);
-          final String status = statusController.text;
-          final UserModel? user = await createUser(count, status);
+          final String f_name = f_nameController.text;
+          final int price = int.parse(priceController.text);
+          final String date = dateController.text;
+          final Welcome? welcome = await createUser(price,date, f_name);
 
 
           setState(() {
-            _user = user!;
+            _welcome = welcome!;
           });
+          print(_welcome?.donationPrice);
         },
         tooltip: 'Increment',
         child: Icon(Icons.add),

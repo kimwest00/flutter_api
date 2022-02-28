@@ -1,32 +1,33 @@
 // To parse this JSON data, do
 //
-//     final userModel = userModelFromJson(jsonString);
+//     final welcome = welcomeFromJson(jsonString);
 
 import 'dart:convert';
 
-UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
+Welcome welcomeFromJson(String str) => Welcome.fromJson(json.decode(str));
 
-String userModelToJson(UserModel data) => json.encode(data.toJson());
+String welcomeToJson(Welcome data) => json.encode(data.toJson());
 
-class UserModel {
-  int count;
-  String status;
-
-  UserModel({
-    required this.count,
-    required this.status,
-
+class Welcome {
+  Welcome({
+    required this.donationDate,
+    required this.donationPrice,
+    required this.fName,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
-    count: json["count"],
-    status: json["status"],
+  String donationDate;
+  int donationPrice;
+  String fName;
 
+  factory Welcome.fromJson(Map<String, dynamic> json) => Welcome(
+    donationDate: json["donationDate"],
+    donationPrice: json["donationPrice"],
+    fName: json["f_name"],
   );
 
   Map<String, dynamic> toJson() => {
-    "count": count,
-    "status": status,
-
+    "donationDate": donationDate,
+    "donationPrice": donationPrice,
+    "f_name": fName,
   };
 }
